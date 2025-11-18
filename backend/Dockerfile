@@ -14,6 +14,9 @@ RUN mvn package
 # Etapa 2: Criar la imagem final para ejecutarla usando el JRE para que sea mas leve
 FROM eclipse-temurin:21-jre-alpine
 
+# Define perfil a ser utilizado
+ENV PROFILE=prod
+
 # Define la carpeta de trabajo dentro del container
 WORKDIR /app
 
