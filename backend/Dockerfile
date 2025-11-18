@@ -8,8 +8,8 @@ WORKDIR /app
 COPY pom.xml ./
 COPY src ./src
 
-# Copila la aplicacion
-RUN mvn package
+# Compila sin correr tests
+RUN mvn -B -q -DskipTests -DskipITs clean package
 
 # Etapa 2: Criar la imagem final para ejecutarla usando el JRE para que sea mas leve
 FROM eclipse-temurin:21-jre-alpine
@@ -30,7 +30,8 @@ COPY --from=build /app/${JAR_FILE} app.jar
 EXPOSE 8080
 
 # Define el comando default para iniciar la aplicacion
-CMD ["java", "-jar", "app.jar"]
+
+CMD ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=${PROFILE} -jar app.jar"]
 
 #Para rodar la aplicacion de forma local en linea de comando
 #docker build -t backend:latest .
