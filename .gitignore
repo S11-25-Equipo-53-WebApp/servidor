@@ -1,0 +1,52 @@
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+### Spring Boot ###
+*.log
+*.tmp
+*.out
+
+# Para archivos de compilación de Spring Boot (si se usa mvn package)
+*.jar
+*.war
+
+### Archivos de sistema ###
+.DS_Store
+Thumbs.db
+
+### Archivos de entorno ###
+.env
+.env.local
+.env.*.local
+.env.production
+.env.properties
+
+### Archivos de configuración del sistema operativo ###
+*.swp
+*.swo
+
+### Carpeta de logs ###
+logs/
+*.log
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+
+### Otros ###
+/bin/
+/build/
+/out/
