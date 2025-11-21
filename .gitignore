@@ -30,6 +30,7 @@ Thumbs.db
 .env.local
 .env.*.local
 .env.production
+.env.properties
 
 ### Archivos de configuración del sistema operativo ###
 *.swp
