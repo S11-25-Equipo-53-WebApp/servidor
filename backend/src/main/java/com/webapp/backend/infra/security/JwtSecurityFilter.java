@@ -1,6 +1,7 @@
 package com.webapp.backend.infra.security;
 
-import com.webapp.backend.repository.UsuarioRepository;
+import com.webapp.backend.infra.security.userDetails.UserDetailsImpl;
+import com.webapp.backend.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +19,7 @@ import java.io.IOException;
 public class JwtSecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final UsuarioRepository usuarioRepository;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -41,18 +42,22 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                var usuario = usuarioRepository.findByEmail(email);
+                var userOpt = userRepository.findByEmail(email);
 
-                if (usuario != null) {
+                if (userOpt.isPresent()) {
+
+                    var userDetails = new UserDetailsImpl(userOpt.get());
+
                     var authentication = new UsernamePasswordAuthenticationToken(
-                            usuario,
+                            userDetails,
                             null,
-                            usuario.getAuthorities()
+                            userDetails.getAuthorities()
                     );
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
+
 
         } catch (Exception e) {
             // TOKEN INVÁLIDO / EXPIRADO → NO LANZAR ERROR

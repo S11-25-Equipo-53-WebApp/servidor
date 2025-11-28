@@ -3,11 +3,12 @@ package com.webapp.backend.services;
 import java.util.Date;
 import java.util.List;
 
+import com.webapp.backend.Entities.enums.FunnelStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.webapp.backend.Entities.Contacto;
+import com.webapp.backend.Entities.Contact;
 import com.webapp.backend.Entities.enums.EstadoFunnel;
 import com.webapp.backend.exceptions.ResourceNotFoundException;
 import com.webapp.backend.repository.ContactoRepository;
@@ -26,78 +27,78 @@ public class ContactosService {
 	 * @throws ResourceNotFoundException Si el contacto con el ID proporcionado no
 	 *                                   existe.
 	 */
-	private Contacto validarContactoExistente(Long id) {
+	private Contact validarContactoExistente(Long id) {
 		return contactoRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Contacto no encontrado con el ID: " + id));
 	}
 
 	@Transactional
-	public Contacto createContacto(Contacto contacto) {
-		if (contacto.getNombre() == null || contacto.getNombre().trim().isEmpty()) {
+	public Contact createContacto(Contact contacto) {
+		if (contacto.getName() == null || contacto.getName().trim().isEmpty()) {
 			throw new IllegalArgumentException("El nombre del Contacto es obligatorio.");
 		}
 
-		if (contacto.getEstadoFunnel() == null) {
-			contacto.setEstadoFunnel(EstadoFunnel.NUEVO);
+		if (contacto.getFunnelStatus() == null) {
+			contacto.setFunnelStatus(FunnelStatus.NEW);
 		}
 
 		contacto.setStatus(Boolean.TRUE);
 
 		Date ahora = new Date();
-		contacto.setDataCreacionContacto(ahora);
-		contacto.setDataAtualizacion(ahora);
+		contacto.setCreatedAt(ahora);
+		contacto.setUpdatedAt(ahora);
 
 		return contactoRepository.save(contacto);
 	}
 
 	@Transactional(readOnly = true)
-	public List<Contacto> getAllContactos() {
+	public List<Contact> getAllContactos() {
 		return contactoRepository.findAll();
 	}
 
 	@Transactional(readOnly = true)
-	public Contacto getContactoById(Long id) {
+	public Contact getContactoById(Long id) {
 		return validarContactoExistente(id);
 	}
 
 	@Transactional
-	public Contacto updateContacto(Long id, Contacto contactoDetails) {
-		Contacto contactoExistente = validarContactoExistente(id);
+	public Contact updateContacto(Long id, Contact contactoDetails) {
+		Contact contactoExistente = validarContactoExistente(id);
 
 		// Actualiza campos
-		if (contactoDetails.getNombre() != null) {
-			contactoExistente.setNombre(contactoDetails.getNombre());
+		if (contactoDetails.getName() != null) {
+			contactoExistente.setName(contactoDetails.getName());
 		}
 		if (contactoDetails.getEmail() != null) {
 			contactoExistente.setEmail(contactoDetails.getEmail());
 		}
-		if (contactoDetails.getTelefonoWhatsapp() != null) {
-			contactoExistente.setTelefonoWhatsapp(contactoDetails.getTelefonoWhatsapp());
+		if (contactoDetails.getWhatsappPhone() != null) {
+			contactoExistente.setWhatsappPhone(contactoDetails.getWhatsappPhone());
 		}
-		if (contactoDetails.getEstadoFunnel() != null) {
-			contactoExistente.setEstadoFunnel(contactoDetails.getEstadoFunnel());
+		if (contactoDetails.getFunnelStatus() != null) {
+			contactoExistente.setFunnelStatus(contactoDetails.getFunnelStatus());
 		}
-		if (contactoDetails.getUsuario() != null) {
-			contactoExistente.setUsuario(contactoDetails.getUsuario());
+		if (contactoDetails.getAssignedTo() != null) {
+			contactoExistente.setAssignedTo(contactoDetails.getAssignedTo());
 		}
 		if (contactoDetails.getStatus() != null) {
 			contactoExistente.setStatus(contactoDetails.getStatus());
 		}
 		// Actualiza la fecha de modificación
-		contactoExistente.setDataAtualizacion(new Date());
+		contactoExistente.setUpdatedAt(new Date());
 
 		return contactoRepository.save(contactoExistente);
 	}
 
 	@Transactional
 	public void deleteContacto(Long id) {
-		Contacto contactoExistente = validarContactoExistente(id);
+		Contact contactoExistente = validarContactoExistente(id);
 
 		// Realiza la eliminación lógica (inactivación)
 		// Establece el campo 'status' a FALSE para inactivar el contacto.
 		contactoExistente.setStatus(Boolean.FALSE);
 
-		contactoExistente.setDataAtualizacion(new Date());
+		contactoExistente.setUpdatedAt(new Date());
 		contactoRepository.save(contactoExistente);
 
 	}

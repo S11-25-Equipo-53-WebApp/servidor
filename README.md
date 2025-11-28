@@ -32,7 +32,7 @@ Desarrollar un CRM inteligente para startups, con:
 - WhatsApp Cloud API (Meta).
 - API SMTP o Brevo para email.
 # Entregables Esperados
-- Prototipo funcional con flujos básicos de usuario, comunicación y segmentación.
+- Prototipo funcional con flujos básicos de user, comunicación y segmentación.
 - Panel de métricas con visualización de KPIs clave (contactos activos, mensajes enviados, tasa de respuesta).
 - Documentación de endpoints y guía de instalación.
 # Tecnologías Utilizadas

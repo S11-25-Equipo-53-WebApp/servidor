@@ -1,8 +1,8 @@
 package com.webapp.backend.controller;
 
-import com.webapp.backend.dto.AuthLoginRequest;
-import com.webapp.backend.dto.AuthRegisterRequest;
-import com.webapp.backend.infra.security.AuthService;
+import com.webapp.backend.dto.auth.AuthLoginRequest;
+import com.webapp.backend.dto.auth.AuthRegisterRequest;
+import com.webapp.backend.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -21,7 +21,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthLoginRequest request) {
         try {
-            return ResponseEntity.ok(authService.login(request.email(), request.password()));
+            return ResponseEntity.ok(authService.login(request));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(401).body("Credenciales inválidas");
         }
