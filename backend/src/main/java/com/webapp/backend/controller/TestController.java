@@ -22,13 +22,13 @@ public class TestController {
     // ------------------------------
 
     @GetMapping("/role/user")
-    @PreAuthorize("hasRole('USUARIO')")
+    @PreAuthorize("hasRole('USER')")
     public String userHello() {
         return "Hola USER! Solo los usuarios con rol USER pueden ver esto.";
     }
 
     @GetMapping("/role/admin")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     public String adminHello() {
         return "Hola ADMIN! Solo los usuarios con rol ADMIN pueden ver esto.";
     }

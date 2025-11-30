@@ -13,18 +13,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "empresas")
+@Table(name = "company")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Empresa extends BaseEntity {
+public class Company extends BaseEntity {
 
-	@Column(name = "nombre", nullable = false)
-	private String nombre;
-	@Column(name = "dominio")
-	private String dominio;
+	@Column(name = "name", nullable = false)
+	private String name;
+	@Column(name = "domain")
+	private String domain;
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "data_creacion_empresa")
-	private Date dataCreacionEmpresa;
+	@Column(name = "created_at")
+	private Date dataCreacionCompany;
 }

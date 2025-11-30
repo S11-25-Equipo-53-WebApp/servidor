@@ -1,9 +1,9 @@
-package com.webapp.backend.dto;
+package com.webapp.backend.dto.auth;
 
 public record AuthRegisterResponse(
         Long id,
         String email,
-        String nombre,
-        String tipoUsuario,
+        String fullName,
+        String typeUser,
         String token
 ) {}
