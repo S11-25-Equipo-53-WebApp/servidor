@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.webapp.backend.Entities.Contacto;
+import com.webapp.backend.Entities.Contact;
 import com.webapp.backend.dto.contacto.ContactoRequestDTO;
 import com.webapp.backend.dto.contacto.ContactoResponseDTO;
 import com.webapp.backend.mappers.ContactoMapper;
@@ -43,10 +43,10 @@ public class ContactosController {
 			@ApiResponse(responseCode = "201", description = "Contato criado com sucesso", content = @Content(schema = @Schema(implementation = ContactoResponseDTO.class))) }) 																																			
 	public ResponseEntity<ContactoResponseDTO> createContacto(@Valid @RequestBody ContactoRequestDTO contactoDTO) {
 		// 1. Convertir DTO a Entidad
-		Contacto entityToSave = contactoMapper.toEntity(contactoDTO);
+		Contact entityToSave = contactoMapper.toEntity(contactoDTO);
 
 		// 2. Llamar al servicio
-		Contacto savedContact = contactosService.createContacto(entityToSave);
+		Contact savedContact = contactosService.createContacto(entityToSave);
 
 		// 3. Convertir Entidad guardada a ResponseDTO
 		return new ResponseEntity<>(contactoMapper.toResponseDTO(savedContact), HttpStatus.CREATED);
@@ -56,7 +56,7 @@ public class ContactosController {
 	@Operation(summary = "Consulta todos los contatos", description = "Consulta todos los contactos del sistema", responses = {
 			@ApiResponse(responseCode = "200", description = "Consulta realizada", content = @Content(schema = @Schema(implementation = ContactoResponseDTO.class))) })
 	public ResponseEntity<List<ContactoResponseDTO>> getAllContactos() {
-		List<Contacto> contactos = contactosService.getAllContactos();
+		List<Contact> contactos = contactosService.getAllContactos();
 
 		List<ContactoResponseDTO> response = contactos.stream().map(contactoMapper::toResponseDTO).toList();
 
@@ -68,7 +68,7 @@ public class ContactosController {
 			@ApiResponse(responseCode = "200", description = "Contacto encontrado", content = @Content(schema = @Schema(implementation = ContactoResponseDTO.class))),
 			@ApiResponse(responseCode = "404", description = "Contacto no encontrado") })
 	public ResponseEntity<ContactoResponseDTO> getContactoById(@PathVariable Long id) {
-		Contacto contacto = contactosService.getContactoById(id);
+		Contact contacto = contactosService.getContactoById(id);
 		return new ResponseEntity<>(contactoMapper.toResponseDTO(contacto), HttpStatus.OK);
 	}
 
@@ -79,9 +79,9 @@ public class ContactosController {
 	public ResponseEntity<ContactoResponseDTO> updateContacto(@PathVariable Long id,
 			@RequestBody ContactoRequestDTO contactoDTO) {
 		// Convertimos el DTO a una entidad temporal para pasar al servicio
-		Contacto contactoDetails = contactoMapper.toEntity(contactoDTO);
+		Contact contactoDetails = contactoMapper.toEntity(contactoDTO);
 
-		Contacto updatedContacto = contactosService.updateContacto(id, contactoDetails);
+		Contact updatedContacto = contactosService.updateContacto(id, contactoDetails);
 
 		return new ResponseEntity<>(contactoMapper.toResponseDTO(updatedContacto), HttpStatus.OK);
 	}

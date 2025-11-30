@@ -1,9 +1,9 @@
 package com.webapp.backend.mappers;
 
+import com.webapp.backend.Entities.User;
 import org.springframework.stereotype.Component;
-import com.webapp.backend.Entities.Contacto;
-import com.webapp.backend.Entities.Usuario;
-import com.webapp.backend.Entities.Empresa;
+import com.webapp.backend.Entities.Contact;
+import com.webapp.backend.Entities.Company;
 import com.webapp.backend.dto.contacto.ContactoRequestDTO;
 import com.webapp.backend.dto.contacto.ContactoResponseDTO;
 
@@ -11,39 +11,39 @@ import com.webapp.backend.dto.contacto.ContactoResponseDTO;
 public class ContactoMapper {
 
     // Convierte Entity -> ResponseDTO
-    public ContactoResponseDTO toResponseDTO(Contacto contacto) {
+    public ContactoResponseDTO toResponseDTO(Contact contacto) {
         if (contacto == null) return null;
         return new ContactoResponseDTO(
             contacto.getId(),
-            contacto.getNombre(),
+            contacto.getName(),
             contacto.getEmail(),
-            contacto.getTelefonoWhatsapp(),
-            contacto.getEstadoFunnel(),
-            contacto.getDataCreacionContacto()
+            contacto.getWhatsappPhone(),
+            contacto.getFunnelStatus(),
+            contacto.getCreatedAt()
         );
     }
 
     // Convierte RequestDTO -> Entity 
-    public Contacto toEntity(ContactoRequestDTO dto) {
+    public Contact toEntity(ContactoRequestDTO dto) {
         if (dto == null) return null;
         
-        Contacto contacto = new Contacto();
-        contacto.setNombre(dto.nombre());
+        Contact contacto = new Contact();
+        contacto.setName(dto.name());
         contacto.setEmail(dto.email());
-        contacto.setTelefonoWhatsapp(dto.telefonoWhatsapp());
+        contacto.setWhatsappPhone(dto.whatsappPhone());
         
         // 1. Mapear Usuario (Si viene el ID en el DTO)
-        if (dto.usuarioId() != null) {
-            Usuario usuario = new Usuario();
-            usuario.setId(dto.usuarioId());
-            contacto.setUsuario(usuario);
+        if (dto.userId() != null) {
+            User user = new User();
+            user.setId(dto.userId());
+            contacto.setAssignedTo(user);
         }
 
         // 2. Mapear Empresa
-        if (dto.empresaId() != null) {
-            Empresa empresa = new Empresa();
-            empresa.setId(dto.empresaId()); 
-            contacto.setEmpresa(empresa); 
+        if (dto.companyId() != null) {
+            Company company = new Company();
+            company.setId(dto.companyId());
+            contacto.setCompany(company);
         }
         
         return contacto;

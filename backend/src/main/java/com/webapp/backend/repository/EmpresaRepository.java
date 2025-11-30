@@ -1,7 +1,7 @@
 package com.webapp.backend.repository;
 
-import com.webapp.backend.Entities.Empresa;
+import com.webapp.backend.Entities.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
+public interface EmpresaRepository extends JpaRepository<Company, Long> {
 }

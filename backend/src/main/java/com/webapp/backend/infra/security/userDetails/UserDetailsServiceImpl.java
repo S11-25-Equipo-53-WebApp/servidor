@@ -1,30 +1,26 @@
-package com.webapp.backend.infra.security;
+package com.webapp.backend.infra.security.userDetails;
 
-import com.webapp.backend.Entities.Usuario;
-import com.webapp.backend.repository.UsuarioRepository;
-
+import com.webapp.backend.Entities.User;
+import com.webapp.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UserRepository repo;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Usuario usuario = usuarioRepository.findByEmail(email);
+        User user = repo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        if (usuario == null) {
-            throw new UsernameNotFoundException("Usuario no encontrado con el email: " + email);
-        }
-
-        return usuario;
+        return new UserDetailsImpl(user);
     }
 }
