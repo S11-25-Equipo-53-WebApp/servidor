@@ -2,7 +2,9 @@ package com.webapp.backend.services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import com.webapp.backend.Entities.Company;
 import com.webapp.backend.Entities.enums.FunnelStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class ContactosService {
 
 	@Autowired
 	private ContactoRepository contactoRepository;
+
+	@Autowired
+	private CompanyService companyService;
 
 	/**
 	 * Valida si un Contacto existe, lanzando una excepción si no se encuentra.
@@ -101,5 +106,29 @@ public class ContactosService {
 		contactoExistente.setUpdatedAt(new Date());
 		contactoRepository.save(contactoExistente);
 
+	}
+
+	@Transactional
+	public Contact getOrCreateContactByWhatsapp(String phone) {
+
+		// Buscar contacto existente
+		Contact contact = contactoRepository.findByWhatsappPhone(phone);
+		Company company = companyService.getById(1L); // Empresa por defecto
+
+		if (contact != null) {
+			return contact;
+		}
+
+		// Si no existe, crearlo
+
+
+		Contact newContact = new Contact();
+		newContact.setName( "WhatsApp User " + phone);
+		newContact.setWhatsappPhone(phone);
+		newContact.setCreatedAt(new Date());
+		newContact.setStatus(true);
+		newContact.setCompany(company);
+
+		return contactoRepository.save(newContact);
 	}
 }

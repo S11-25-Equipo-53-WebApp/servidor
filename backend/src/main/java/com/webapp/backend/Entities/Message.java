@@ -3,10 +3,7 @@ package com.webapp.backend.Entities;
 import com.webapp.backend.Entities.enums.DirectionMenssage;
 import com.webapp.backend.Entities.enums.TypeMessage;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -16,6 +13,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Message extends BaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -28,7 +26,7 @@ public class Message extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user; // Nullable for incoming messages
+    private User user;
 
     @Column(columnDefinition = "TEXT")
     private String content;

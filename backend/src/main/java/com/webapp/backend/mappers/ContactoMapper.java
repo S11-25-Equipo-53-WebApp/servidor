@@ -7,6 +7,8 @@ import com.webapp.backend.Entities.Company;
 import com.webapp.backend.dto.contacto.ContactoRequestDTO;
 import com.webapp.backend.dto.contacto.ContactoResponseDTO;
 
+import java.util.Date;
+
 @Component
 public class ContactoMapper {
 

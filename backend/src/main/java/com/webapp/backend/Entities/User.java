@@ -36,4 +36,7 @@ public class User extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
+
+    public User(Long userId) {
+    }
 }

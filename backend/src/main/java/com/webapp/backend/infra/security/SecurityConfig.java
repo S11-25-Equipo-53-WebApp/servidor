@@ -42,11 +42,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**",  "/public/**").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/public/**", "/messages/**").permitAll()
+
+                        // WHATSAPP WEBHOOK (GET y POST)
+                        .requestMatchers("/webhook/whatsapp", "/webhook/whatsapp/**").permitAll()
 
                         // Everything else requires auth
                         .anyRequest().authenticated()
                 )
+
                 // Add JWT validation filter BEFORE Username/Password auth
                 .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class);
 

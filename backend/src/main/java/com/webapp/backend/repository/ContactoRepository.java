@@ -5,7 +5,12 @@ import org.springframework.stereotype.Repository;
 
 import com.webapp.backend.Entities.Contact;
 
+import java.util.Optional;
+
 @Repository
 public interface ContactoRepository extends JpaRepository<Contact, Long>{
+    Optional<Contact> findByWhatsappPhoneAndCompanyId(String whatsappPhone, Long companyId);
+
+    Contact findByWhatsappPhone(String whatsappPhone);
 
 }
