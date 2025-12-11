@@ -2,9 +2,11 @@ package com.webapp.backend.controller;
 
 import java.util.List;
 
+import com.webapp.backend.Entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -93,5 +95,16 @@ public class ContactosController {
 	public ResponseEntity<Void> deleteContacto(@PathVariable Long id) {
 		contactosService.deleteContacto(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping("/assigned")
+	public ResponseEntity<List<ContactoResponseDTO>> getContactsAssignedToUser(
+			@AuthenticationPrincipal User authUser) {
+
+		Long userId = authUser.getId();
+
+		List<Contact> contacts = contactosService.getContactsAssignedToUser(userId);
+
+		return ResponseEntity.ok(contactoMapper.toResponseList(contacts));
 	}
 }

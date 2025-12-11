@@ -30,6 +30,7 @@ public class TokenService {
                     .withIssuer("webapp")
                     .withSubject(user.getEmail())     // Subject debe ser username
                     .withClaim("id", user.getId())
+                    .withClaim("role", user.getUserType().name())
                     .withExpiresAt(generarFechaDeExpiracion())
                     .sign(algorithm);
 
