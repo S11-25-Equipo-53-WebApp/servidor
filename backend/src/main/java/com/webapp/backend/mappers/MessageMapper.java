@@ -5,6 +5,9 @@ import com.webapp.backend.Entities.Message;
 import com.webapp.backend.Entities.User;
 import com.webapp.backend.Entities.enums.DirectionMenssage;
 import com.webapp.backend.Entities.enums.TypeMessage;
+import com.webapp.backend.dto.ContactDTO;
+import com.webapp.backend.dto.MessageDTO;
+import com.webapp.backend.dto.UserDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -40,6 +43,37 @@ public class MessageMapper {
                 .direction(DirectionMenssage.OUTGOING)
                 .timestamp(new Date())
                 .build();
+    }
+
+    public MessageDTO toMessageDTO(Message message) {
+        if (message == null) return null;
+
+        // Convertimos el contacto a DTO
+        ContactDTO contactDTO = new ContactDTO(
+                message.getContact().getId(),
+                message.getContact().getName(),
+                message.getContact().getWhatsappPhone(),
+                message.getContact().getPhone()
+        );
+
+        // Convertimos el usuario a DTO si existe
+        UserDTO userDTO = null;
+        if (message.getUser() != null) {
+            userDTO = new UserDTO(
+                    message.getUser().getId(),
+                    message.getUser().getFullName(),
+                    message.getUser().getEmail()
+            );
+        }
+
+        return new MessageDTO(
+                message.getId(),
+                message.getContent(),
+                message.getDirection().name(),
+                message.getTimestamp(),
+                contactDTO,
+                userDTO
+        );
     }
 
 }

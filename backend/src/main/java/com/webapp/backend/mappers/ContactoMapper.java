@@ -8,6 +8,7 @@ import com.webapp.backend.dto.contacto.ContactoRequestDTO;
 import com.webapp.backend.dto.contacto.ContactoResponseDTO;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class ContactoMapper {
@@ -50,4 +51,13 @@ public class ContactoMapper {
         
         return contacto;
     }
+
+    public List<ContactoResponseDTO> toResponseList(List<Contact> contacts) {
+        if (contacts == null) return null;
+
+        return contacts.stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
 }

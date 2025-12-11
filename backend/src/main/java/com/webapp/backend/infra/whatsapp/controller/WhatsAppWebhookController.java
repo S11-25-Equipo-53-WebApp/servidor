@@ -2,7 +2,7 @@ package com.webapp.backend.infra.whatsapp.controller;
 
 import com.webapp.backend.infra.whatsapp.dto.WhatsAppWebhookRequest;
 import com.webapp.backend.infra.whatsapp.service.WhatsAppMessageService;
-import com.webapp.backend.services.MessageService;
+import com.webapp.backend.websocket.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +15,12 @@ public class WhatsAppWebhookController {
     @Value("${whatsapp.verify.token}")
     private String verifyToken;
 
-    private final WhatsAppMessageService whatsAppMessageService; // para enviar mensajes
-    private final MessageService messageService; // ⚡ servicio interno para guardar mensaje
+    private final WhatsAppMessageService whatsAppMessageService;
+    private final ChatService chatService; // ⚡ reemplaza el uso directo de MessageService
 
+    /**
+     * Verificación de webhook (GET)
+     */
     @GetMapping
     public String verifyWebhook(
             @RequestParam(name = "hub.mode") String mode,
@@ -27,13 +30,14 @@ public class WhatsAppWebhookController {
         if ("subscribe".equals(mode) && verifyToken.equals(token)) {
             return challenge;
         }
-        return "Invalid.";
+        return "Invalid verification.";
     }
 
+    /**
+     * Recibe mensaje entrante (POST)
+     */
     @PostMapping
     public void receiveMessage(@RequestBody WhatsAppWebhookRequest request) {
-        System.out.println("🔥 RAW BODY:");
-        System.out.println(request);
 
         if (request.entry() == null || request.entry().isEmpty()) {
             System.out.println("Webhook vacío: sin entries");
@@ -41,7 +45,6 @@ public class WhatsAppWebhookController {
         }
 
         var entry = request.entry().getFirst();
-
         if (entry.changes() == null || entry.changes().isEmpty()) {
             System.out.println("Webhook sin changes. Ignorado.");
             return;
@@ -49,7 +52,6 @@ public class WhatsAppWebhookController {
 
         var change = entry.changes().getFirst();
         var value = change.value();
-
         if (value == null || value.messages() == null || value.messages().isEmpty()) {
             System.out.println("Evento recibido sin mensajes. Ignorado.");
             return;
@@ -58,16 +60,19 @@ public class WhatsAppWebhookController {
         var message = value.messages().getFirst();
 
         String from = message.from();
-        System.out.println("Mensaje de: " + from);
         String body = message.text() != null ? message.text().body() : "(mensaje no textual)";
 
         System.out.println("📩 Mensaje recibido de " + from + ": " + body);
 
-        // ⚡ GUARDA EN TU BASE DE DATOS
-        Long companyId = 1L; // <-- en un futuro lo obtendrás del header o del token
-        messageService.saveInboundMessage(companyId, from, body);
+        // ============================================================
+        // ⚡ Llamada a ChatService
+        // ============================================================
+        Long companyId = 1L; // TODO: en un futuro, obtener del token o del header
+        chatService.receiveInbound(companyId, from, body);
 
-        // Respuesta automática opcional
+        // ============================================================
+        // Opcional: respuesta automática
+        // ============================================================
         whatsAppMessageService.sendTextMessage(from, "Hola! Hemos recibido tu mensaje 😊");
     }
 }

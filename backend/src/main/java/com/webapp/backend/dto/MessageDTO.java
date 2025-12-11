@@ -7,5 +7,6 @@ public record MessageDTO(
         String content,
         String direction,
         Date timestamp,
-        ContactDTO contact
+        ContactDTO contact,
+        UserDTO user      // <-- nuevo campo
 ) {}

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.webapp.backend.Entities.Company;
 import com.webapp.backend.Entities.enums.FunnelStatus;
+import com.webapp.backend.dto.contacto.ContactoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,4 +132,10 @@ public class ContactosService {
 
 		return contactoRepository.save(newContact);
 	}
+
+	public List<Contact> getContactsAssignedToUser(Long userId) {
+		return contactoRepository.findByAssignedToId(userId);
+	}
+
+
 }
